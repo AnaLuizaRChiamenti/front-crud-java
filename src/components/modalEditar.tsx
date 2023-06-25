@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from '@mui/system';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import taskType from '../types/taskType';
+import { getTaskAsyncThunk, taskUpdateAsyncThunk } from '../store/modules/UserSlice';
 
 interface ModalInputsProps {
     openModal: boolean;
@@ -19,13 +20,24 @@ interface ModalInputsProps {
 const ModalInputsEdit: React.FC<ModalInputsProps> = ({ openModal, actionCancel, actionConfirm, task }) => {
     const dispatch = useAppDispatch();
     const [editedTask, setEditedTask] = React.useState(task);
-    const user = useAppSelector(state => state.user.user);
+    const email = useAppSelector(state => state.user.user.email);
 
     const handleClose = () => {
         actionCancel();
     };
 
     const handleConfirm = () => {
+        const updateNote = {
+            id: editedTask.id,
+            email: email,
+            title: editedTask.title,
+            description: editedTask.description
+        };
+
+        dispatch(taskUpdateAsyncThunk(updateNote));
+        setTimeout(() => {
+            dispatch(getTaskAsyncThunk(updateNote.email));
+        }, 200);
         actionConfirm();
     };
 

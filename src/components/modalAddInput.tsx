@@ -25,6 +25,12 @@ const ModalInputs: React.FC<ModalInputsProps> = ({ openModal, actionCancel, acti
     const email = useAppSelector(state => state.user.user.email);
 
     const handleClose = () => {
+        setTask({
+            id: '',
+            title: '',
+            description: '',
+            archived: false
+        });
         actionCancel();
     };
 

@@ -24,15 +24,20 @@ import taskType from '../types/taskType';
 import ModalInputsEdit from '../components/modalEditar';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getTaskAsyncThunk, taskDeleteAsyncThunk } from '../store/modules/UserSlice';
 
 const Notes: React.FC = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const [openModalEdit, setOpenModalEdit] = useState(false);
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-    const [selectedNote, setSelectedNote] = useState<taskType | null>(null);
+    const [selectedNote, setSelectedNote] = useState<taskType>({} as taskType);
+    const email = useAppSelector(state => state.user.user.email);
 
     const listTaks = useAppSelector(state => state.user.user.tasks);
     const [editedTaks, setEditedTaks] = useState<taskType>({} as taskType);
+
+    const dispatch = useAppDispatch();
 
     const handleClose = () => {
         setOpenAdd(false);
@@ -64,14 +69,19 @@ const Notes: React.FC = () => {
     };
 
     const handleDeleteConfirm = () => {
-        if (selectedNote) {
-            setDeleteConfirmOpen(false);
-            setSelectedNote(null);
-        }
+        const deleteTask = {
+            id: selectedNote?.id,
+            email
+        };
+
+        dispatch(taskDeleteAsyncThunk(deleteTask));
+        setTimeout(() => {
+            dispatch(getTaskAsyncThunk(deleteTask.email));
+        }, 500);
+        setDeleteConfirmOpen(false);
     };
 
     const handleDeleteCancel = () => {
-        setSelectedNote(null);
         setDeleteConfirmOpen(false);
     };
 
