@@ -85,6 +85,8 @@ export const getTaskAsyncThunk = createAsyncThunk('getTask', async (email: strin
 export const taskDeleteAsyncThunk = createAsyncThunk('taskDelete', async ({ email, id }: defaultTask) => {
     console.log(id);
     const response = await api.delete(`/tasks/${email}/${id}`);
+    console.log(response.data);
+
     return response.data;
 });
 
@@ -99,6 +101,13 @@ export const taskUpdateAsyncThunk = createAsyncThunk(
         return response.data;
     }
 );
+
+export const taskArchivedAsyncThunk = createAsyncThunk('taskArchive', async ({ email, id }: defaultTask) => {
+    console.log(id);
+    const response = await api.put(`/tasks/${email}/${id}/archived`);
+    alert('task arquivada');
+    return response.data;
+});
 
 export const userSlice = createSlice({
     name: 'User',

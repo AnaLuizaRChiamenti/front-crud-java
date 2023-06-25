@@ -1,5 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import FolderIcon from '@mui/icons-material/Folder';
 import {
     Grid,
     Box,
@@ -25,7 +26,7 @@ import ModalInputsEdit from '../components/modalEditar';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getTaskAsyncThunk, taskDeleteAsyncThunk } from '../store/modules/UserSlice';
+import { getTaskAsyncThunk, taskArchivedAsyncThunk, taskDeleteAsyncThunk } from '../store/modules/UserSlice';
 
 const Notes: React.FC = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -85,6 +86,16 @@ const Notes: React.FC = () => {
         setDeleteConfirmOpen(false);
     };
 
+    const taskArchived = (id: string) => {
+        const task = listTaks.find(item => item.id === id);
+        if (task) {
+            dispatch(taskArchivedAsyncThunk({ id: id, email: email }));
+            setTimeout(() => {
+                dispatch(getTaskAsyncThunk(email));
+            }, 200);
+        }
+    };
+
     return (
         <Grid container sx={{ width: '100%', height: '100vh' }}>
             <ResponsiveAppBar />
@@ -118,12 +129,15 @@ const Notes: React.FC = () => {
                                         {note.description}
                                     </Typography>
                                 </CardContent>
-                                <CardActions sx={{ display: 'flex', height: '40%' }}>
+                                <CardActions sx={{ display: 'flex', height: '40%', width: '100px' }}>
                                     <IconButton aria-label="edit" onClick={() => handleEdit(note)}>
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton aria-label="delete" onClick={() => handleDelete(note)}>
                                         <DeleteIcon />
+                                    </IconButton>
+                                    <IconButton size="small" onClick={() => taskArchived(note.id)}>
+                                        <FolderIcon />
                                     </IconButton>
                                 </CardActions>
                             </Card>
