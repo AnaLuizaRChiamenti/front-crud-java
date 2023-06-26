@@ -47,7 +47,7 @@ const ResponsiveAppBar: React.FC = () => {
     };
 
     return (
-        <AppBar position="absolute" sx={{ backgroundColor: '#D0A8E4' }}>
+        <AppBar position="absolute" sx={{ backgroundColor: '#c98de7' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
