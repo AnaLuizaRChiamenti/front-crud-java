@@ -17,15 +17,11 @@ import {
     Switch,
     Button,
     ListItem,
-    ListItemAvatar
+    ListItemAvatar,
+    Checkbox
 } from '@mui/material';
-import {
-    Add as AddIcon,
-    Archive,
-    Delete as DeleteIcon,
-    Edit as EditIcon,
-    Folder as FolderIcon
-} from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon } from '@mui/icons-material';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getTaskAsyncThunk, taskArchivedAsyncThunk, taskDeleteAsyncThunk } from '../store/modules/UserSlice';
 
@@ -275,12 +271,25 @@ const Notes: React.FC = () => {
                                                           >
                                                               <DeleteIcon />
                                                           </IconButton>
-                                                          <IconButton
-                                                              size="small"
+                                                          <Checkbox
+                                                              icon={
+                                                                  <FolderOffIcon
+                                                                      color="disabled"
+                                                                      sx={{ width: '25px', height: '25px' }}
+                                                                  />
+                                                              }
+                                                              checkedIcon={
+                                                                  <FolderIcon
+                                                                      sx={{
+                                                                          width: '25px',
+                                                                          height: '25px',
+                                                                          color: '#000000'
+                                                                      }}
+                                                                  />
+                                                              }
+                                                              sx={{ width: '25px', height: '25px' }}
                                                               onClick={() => taskArchived(note.id)}
-                                                          >
-                                                              <FolderIcon />
-                                                          </IconButton>
+                                                          />
                                                       </CardActions>
                                                   </Card>
                                               </Grid>
@@ -328,12 +337,25 @@ const Notes: React.FC = () => {
                                                           >
                                                               <DeleteIcon />
                                                           </IconButton>
-                                                          <IconButton
-                                                              size="small"
+                                                          <Checkbox
+                                                              icon={
+                                                                  <FolderOffIcon
+                                                                      color="disabled"
+                                                                      sx={{ width: '25px', height: '25px' }}
+                                                                  />
+                                                              }
+                                                              checkedIcon={
+                                                                  <FolderIcon
+                                                                      sx={{
+                                                                          width: '25px',
+                                                                          height: '25px',
+                                                                          color: '#000000'
+                                                                      }}
+                                                                  />
+                                                              }
+                                                              sx={{ width: '25px', height: '25px' }}
                                                               onClick={() => taskArchived(note.id)}
-                                                          >
-                                                              <FolderIcon />
-                                                          </IconButton>
+                                                          />
                                                       </CardActions>
                                                   </Card>
                                               </Grid>
