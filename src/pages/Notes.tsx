@@ -20,7 +20,13 @@ import {
     ListItemAvatar,
     Checkbox
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon } from '@mui/icons-material';
+import {
+    Add as AddIcon,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+    Folder as FolderIcon,
+    Padding
+} from '@mui/icons-material';
 import FolderOffIcon from '@mui/icons-material/FolderOff';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -317,7 +323,8 @@ const Notes: React.FC = () => {
                                                               width: '300px',
                                                               height: '150px',
                                                               marginY: '25px',
-                                                              marginX: '15px'
+                                                              marginX: '15px',
+                                                              position: 'relative' // Adicione essa linha para garantir que o posicionamento absoluto seja relativo ao card
                                                           }}
                                                       >
                                                           <CardContent>
@@ -330,17 +337,24 @@ const Notes: React.FC = () => {
                                                               </Typography>
                                                           </CardContent>
                                                           <CardActions
-                                                              sx={{ display: 'flex', height: '40%', width: '100px' }}
+                                                              sx={{
+                                                                  display: 'flex',
+                                                                  justifyContent: 'space-between',
+                                                                  position: 'absolute', // Adicione essa linha para posicionar o CardActions de forma absoluta
+                                                                  bottom: 0 // Adicione essa linha para posicionar o CardActions no final do card
+                                                              }}
                                                           >
                                                               <IconButton
                                                                   aria-label="edit"
                                                                   onClick={() => handleEdit(note)}
+                                                                  sx={{ width: '25px', height: '25px' }}
                                                               >
                                                                   <EditIcon />
                                                               </IconButton>
                                                               <IconButton
                                                                   aria-label="delete"
                                                                   onClick={() => handleDelete(note)}
+                                                                  sx={{ width: '25px', height: '25px' }}
                                                               >
                                                                   <DeleteIcon />
                                                               </IconButton>
@@ -360,7 +374,11 @@ const Notes: React.FC = () => {
                                                                           }}
                                                                       />
                                                                   }
-                                                                  sx={{ width: '25px', height: '25px' }}
+                                                                  sx={{
+                                                                      width: '25px',
+                                                                      height: '25px',
+                                                                      marginLeft: '13px !important'
+                                                                  }}
                                                                   onClick={() => taskArchived(note.id)}
                                                               />
                                                           </CardActions>
