@@ -213,27 +213,10 @@ const Notes: React.FC = () => {
                                             value={filterTask}
                                             label="Filtrar recado por recado"
                                             InputLabelProps={{
-                                                style: { color: 'white' }
+                                                style: { color: 'black' }
                                             }}
                                             variant="outlined"
                                         />
-                                    </Box>
-                                    <Box width="100px" sx={{ display: 'flex' }}>
-                                        <Button
-                                            sx={{
-                                                height: '55px',
-                                                backgroundColor: '#c98de7',
-                                                ':hover': {
-                                                    backgroundColor: '#773299'
-                                                },
-                                                color: 'black'
-                                            }}
-                                            onClick={taskFilter}
-                                            type="submit"
-                                            variant="contained"
-                                        >
-                                            Pesquisar
-                                        </Button>
                                     </Box>
                                 </Grid>
                                 <Grid container width="100%">
