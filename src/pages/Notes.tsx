@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, { useState } from 'react';
 import {
     Box,
@@ -14,9 +15,17 @@ import {
     Divider,
     styled,
     Switch,
-    Button
+    Button,
+    ListItem,
+    ListItemAvatar
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon } from '@mui/icons-material';
+import {
+    Add as AddIcon,
+    Archive,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+    Folder as FolderIcon
+} from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getTaskAsyncThunk, taskArchivedAsyncThunk, taskDeleteAsyncThunk } from '../store/modules/UserSlice';
 
@@ -35,9 +44,11 @@ const Notes: React.FC = () => {
     const [openModalEdit, setOpenModalEdit] = useState(false);
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState({} as taskType);
+    const [editedTaks, setEditedTaks] = useState({} as taskType);
+    const [showArchived, setShowArchived] = useState(false);
     const email = useAppSelector(state => state.user.user.email);
     const listTaks = useAppSelector(state => state.user.user.tasks);
-    const [editedTaks, setEditedTaks] = useState({} as taskType);
+    const archivedTasks = listTaks.filter(item => item.archived);
 
     const svgStringMenos =
         '<svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="-37.33 -37.33 111.99 111.99" xml:space="preserve" stroke="#000000" stroke-width="0.00037331000000000007"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M27.419,9.191H16.005c-0.337-1.797-1.909-3.158-3.803-3.158H3.875C1.734,6.033,0,7.767,0,9.91v3.156v3.158v11.199 c0,2.14,1.734,3.875,3.875,3.875h23.543c2.141,0,3.876-1.735,3.876-3.875V13.066C31.295,10.925,29.561,9.191,27.419,9.191z M28.086,21.8c0,0.671-0.543,1.214-1.214,1.214h-9.366c-0.67,0-1.214-0.543-1.214-1.214v-1.977c0-0.669,0.544-1.212,1.214-1.212 h9.366c0.671,0,1.214,0.543,1.214,1.212V21.8z"></path> <path d="M34.734,9.587h-2.973c0.612,0.756,0.994,1.703,0.994,2.748v16.228c0,0.146-0.029,0.285-0.044,0.431 c0.554-0.563,1.006-1.228,1.267-1.938l3.111-13.751C37.84,11.249,36.785,9.587,34.734,9.587z"></path> </g> </g> </g></svg>';
@@ -99,8 +110,7 @@ const Notes: React.FC = () => {
     };
 
     const taskArchived = (id: string) => {
-        const task = listTaks.find(item => item.id === id);
-        if (task) {
+        if (archivedTasks) {
             dispatch(taskArchivedAsyncThunk({ id: id, email: email }));
             setTimeout(() => {
                 dispatch(getTaskAsyncThunk(email));
@@ -152,6 +162,10 @@ const Notes: React.FC = () => {
         }
     }));
 
+    const handleShowArchivedChange = () => {
+        setShowArchived(!showArchived);
+    };
+
     return (
         <Grid container sx={{ width: '100%', height: '100vh' }}>
             <ResponsiveAppBar />
@@ -167,7 +181,7 @@ const Notes: React.FC = () => {
 
                                 <Grid item xs={12} display="flex" alignItems="center" justifyContent="space-between">
                                     <Box>
-                                        <MaterialUISwitch />
+                                        <MaterialUISwitch checked={showArchived} onChange={handleShowArchivedChange} />
                                     </Box>
                                     <Box component="form" width="800px" marginX="10px">
                                         <TextField
@@ -198,7 +212,7 @@ const Notes: React.FC = () => {
                                             variant="outlined" */
                                         />
                                     </Box>
-                                    <Box width="150px" sx={{ display: 'flex' }}>
+                                    <Box width="100px" sx={{ display: 'flex' }}>
                                         <Button
                                             sx={{
                                                 height: '55px',
@@ -212,54 +226,118 @@ const Notes: React.FC = () => {
                                             type="submit"
                                             variant="contained"
                                         >
-                                            Filtrar
+                                            Pesquisar
                                         </Button>
                                     </Box>
                                 </Grid>
-                                <Grid item xs={12} display="flex" justifyContent="flex-end"></Grid>
                                 <Grid container width="100%">
-                                    {listTaks.map(note => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={6}
-                                            md={3}
-                                            key={note?.id}
-                                            display="flex"
-                                            justifyContent="center"
-                                            flexDirection="row"
-                                        >
-                                            <Card
-                                                sx={{
-                                                    width: '300px',
-                                                    height: '150px',
-                                                    marginY: '25px',
-                                                    marginX: '15px'
-                                                }}
-                                            >
-                                                <CardContent>
-                                                    <Typography gutterBottom variant="h5" component="div">
-                                                        {note.title}
-                                                    </Typography>
+                                    {showArchived
+                                        ? archivedTasks.map(note => (
+                                              <Grid
+                                                  item
+                                                  xs={12}
+                                                  sm={6}
+                                                  md={3}
+                                                  key={note?.id}
+                                                  display="flex"
+                                                  justifyContent="center"
+                                                  flexDirection="row"
+                                              >
+                                                  <Card
+                                                      sx={{
+                                                          width: '300px',
+                                                          height: '150px',
+                                                          marginY: '25px',
+                                                          marginX: '15px'
+                                                      }}
+                                                  >
+                                                      <CardContent>
+                                                          <Typography gutterBottom variant="h5" component="div">
+                                                              {note.title}
+                                                          </Typography>
 
-                                                    <Typography variant="body2" color="text.secondary" noWrap>
-                                                        {note.description}
-                                                    </Typography>
-                                                </CardContent>
-                                                <CardActions sx={{ display: 'flex', height: '40%', width: '100px' }}>
-                                                    <IconButton aria-label="edit" onClick={() => handleEdit(note)}>
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                    <IconButton aria-label="delete" onClick={() => handleDelete(note)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                    <IconButton size="small" onClick={() => taskArchived(note.id)}>
-                                                        <FolderIcon />
-                                                    </IconButton>
-                                                </CardActions>
-                                            </Card>
-                                        </Grid>
-                                    ))}
+                                                          <Typography variant="body2" color="text.secondary" noWrap>
+                                                              {note.description}
+                                                          </Typography>
+                                                      </CardContent>
+                                                      <CardActions
+                                                          sx={{ display: 'flex', height: '40%', width: '100px' }}
+                                                      >
+                                                          <IconButton
+                                                              aria-label="edit"
+                                                              onClick={() => handleEdit(note)}
+                                                          >
+                                                              <EditIcon />
+                                                          </IconButton>
+                                                          <IconButton
+                                                              aria-label="delete"
+                                                              onClick={() => handleDelete(note)}
+                                                          >
+                                                              <DeleteIcon />
+                                                          </IconButton>
+                                                          <IconButton
+                                                              size="small"
+                                                              onClick={() => taskArchived(note.id)}
+                                                          >
+                                                              <FolderIcon />
+                                                          </IconButton>
+                                                      </CardActions>
+                                                  </Card>
+                                              </Grid>
+                                          ))
+                                        : listTaks.map(note => (
+                                              <Grid
+                                                  item
+                                                  xs={12}
+                                                  sm={6}
+                                                  md={3}
+                                                  key={note?.id}
+                                                  display="flex"
+                                                  justifyContent="center"
+                                                  flexDirection="row"
+                                              >
+                                                  <Card
+                                                      sx={{
+                                                          width: '300px',
+                                                          height: '150px',
+                                                          marginY: '25px',
+                                                          marginX: '15px'
+                                                      }}
+                                                  >
+                                                      <CardContent>
+                                                          <Typography gutterBottom variant="h5" component="div">
+                                                              {note.title}
+                                                          </Typography>
+
+                                                          <Typography variant="body2" color="text.secondary" noWrap>
+                                                              {note.description}
+                                                          </Typography>
+                                                      </CardContent>
+                                                      <CardActions
+                                                          sx={{ display: 'flex', height: '40%', width: '100px' }}
+                                                      >
+                                                          <IconButton
+                                                              aria-label="edit"
+                                                              onClick={() => handleEdit(note)}
+                                                          >
+                                                              <EditIcon />
+                                                          </IconButton>
+                                                          <IconButton
+                                                              aria-label="delete"
+                                                              onClick={() => handleDelete(note)}
+                                                          >
+                                                              <DeleteIcon />
+                                                          </IconButton>
+                                                          <IconButton
+                                                              size="small"
+                                                              onClick={() => taskArchived(note.id)}
+                                                          >
+                                                              <FolderIcon />
+                                                          </IconButton>
+                                                      </CardActions>
+                                                  </Card>
+                                              </Grid>
+                                          ))}
                                     <Dialog open={deleteConfirmOpen} onClose={handleDeleteCancel}>
                                         <DialogTitle>Confirmar exclusão</DialogTitle>
                                         <DialogContent>
