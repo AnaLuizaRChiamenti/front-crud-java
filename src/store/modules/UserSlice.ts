@@ -105,7 +105,11 @@ export const taskUpdateAsyncThunk = createAsyncThunk(
 export const taskArchivedAsyncThunk = createAsyncThunk('taskArchive', async ({ email, id }: defaultTask) => {
     console.log(id);
     const response = await api.put(`/tasks/${email}/${id}/archived`);
-    alert('task arquivada');
+    return response.data;
+});
+
+export const taskFilterAsyncThunk = createAsyncThunk('taskFilter', async (email: string) => {
+    const response = await api.get(`/tasks/${email}/filter`);
     return response.data;
 });
 
@@ -121,6 +125,9 @@ export const userSlice = createSlice({
             state.user.tasks.push(action.payload);
         });
         builder.addCase(getTaskAsyncThunk.fulfilled, (state, action) => {
+            state.user.tasks = action.payload;
+        });
+        builder.addCase(taskFilterAsyncThunk.fulfilled, (state, action) => {
             state.user.tasks = action.payload;
         });
     },
