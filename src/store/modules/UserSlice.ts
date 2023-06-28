@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import userType from '../../types/userType';
 import api from '../../service';
+import axios, { AxiosError } from 'axios';
 
 interface userstate {
     user: userType;
@@ -41,14 +42,26 @@ interface taskUpdate {
 export const userCreateAsyncThunk = createAsyncThunk(
     'userCreate',
     async ({ email, password, repassword }: userCreate) => {
-        const response = await api.post('/users', {
-            email,
-            password,
-            repassword
-        });
-        console.log(response);
+        try {
+            const response = await api.post('/users', {
+                email,
+                password,
+                repassword
+            });
+            console.log(response);
 
-        return response.data;
+            return response.data;
+        } catch (error) {
+            let errorMessage = 'Erro desconhecido';
+
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data?.error) {
+                    errorMessage = error.response.data.error;
+                }
+            }
+
+            throw new Error(errorMessage);
+        }
     }
 );
 
@@ -108,11 +121,6 @@ export const taskArchivedAsyncThunk = createAsyncThunk('taskArchive', async ({ e
     return response.data;
 });
 
-export const taskFilterAsyncThunk = createAsyncThunk('taskFilter', async (email: string) => {
-    const response = await api.get(`/tasks/${email}/filter`);
-    return response.data;
-});
-
 export const userSlice = createSlice({
     name: 'User',
     initialState,
@@ -125,9 +133,6 @@ export const userSlice = createSlice({
             state.user.tasks.push(action.payload);
         });
         builder.addCase(getTaskAsyncThunk.fulfilled, (state, action) => {
-            state.user.tasks = action.payload;
-        });
-        builder.addCase(taskFilterAsyncThunk.fulfilled, (state, action) => {
             state.user.tasks = action.payload;
         });
     },

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getTaskAsyncThunk, userCreateAsyncThunk, userLoginAsyncThunk } from '../store/modules/UserSlice';
+import { AxiosError } from 'axios';
 
 interface FormProps {
     mode: 'signin' | 'signup';
@@ -25,7 +26,7 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
 
     useEffect(() => {
         if (mode === 'signup') {
-            const emailValid = (email.endsWith('.com') || email.endsWith('.com.br')) && email.includes('@'); // TODO fazer a validação de letra Aa
+            const emailValid = (email.endsWith('.com') || email.endsWith('.com.br')) && email.includes('@');
 
             if (email.length > 0) {
                 setErrorEmail(!emailValid);

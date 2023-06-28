@@ -16,25 +16,14 @@ import {
     styled,
     Switch,
     Button,
-    ListItem,
-    ListItemAvatar,
-    Checkbox
+    Checkbox,
+    ListItemAvatar
 } from '@mui/material';
-import {
-    Add as AddIcon,
-    Delete as DeleteIcon,
-    Edit as EditIcon,
-    Folder as FolderIcon,
-    Padding
-} from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon } from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
 import FolderOffIcon from '@mui/icons-material/FolderOff';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import {
-    getTaskAsyncThunk,
-    taskArchivedAsyncThunk,
-    taskDeleteAsyncThunk,
-    taskFilterAsyncThunk
-} from '../store/modules/UserSlice';
+import { getTaskAsyncThunk, taskArchivedAsyncThunk, taskDeleteAsyncThunk } from '../store/modules/UserSlice';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -45,6 +34,7 @@ import ModalInputsEdit from '../components/modalEditar';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 
 import taskType from '../types/taskType';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Notes: React.FC = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -69,6 +59,13 @@ const Notes: React.FC = () => {
     const svgUrlMais = `data:image/svg+xml;base64,${encodedSvgs}`;
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (!email) {
+            navigate('/');
+        }
+    }, []);
 
     const handleClose = () => {
         setOpenAdd(false);
@@ -124,10 +121,6 @@ const Notes: React.FC = () => {
                 dispatch(getTaskAsyncThunk(email));
             }, 200);
         }
-    };
-
-    const taskFilter = () => {
-        dispatch(taskFilterAsyncThunk(email));
     };
 
     const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -211,7 +204,7 @@ const Notes: React.FC = () => {
                                                         borderColor: '#c98de7'
                                                     },
                                                     '& .MuiInputBase-input': {
-                                                        color: '#000000' //
+                                                        color: '#000000'
                                                     }
                                                 }
                                             }}
@@ -250,7 +243,8 @@ const Notes: React.FC = () => {
                                                               width: '300px',
                                                               height: '150px',
                                                               marginY: '25px',
-                                                              marginX: '15px'
+                                                              marginX: '15px',
+                                                              position: 'relative'
                                                           }}
                                                       >
                                                           <CardContent>
@@ -263,39 +257,40 @@ const Notes: React.FC = () => {
                                                               </Typography>
                                                           </CardContent>
                                                           <CardActions
-                                                              sx={{ display: 'flex', height: '40%', width: '100px' }}
+                                                              sx={{
+                                                                  display: 'flex',
+                                                                  justifyContent: 'space-between',
+                                                                  position: 'absolute',
+                                                                  bottom: 0
+                                                              }}
                                                           >
                                                               <IconButton
                                                                   aria-label="edit"
                                                                   onClick={() => handleEdit(note)}
+                                                                  sx={{ width: '25px', height: '25px' }}
                                                               >
                                                                   <EditIcon />
                                                               </IconButton>
                                                               <IconButton
                                                                   aria-label="delete"
                                                                   onClick={() => handleDelete(note)}
+                                                                  sx={{ width: '25px', height: '25px' }}
                                                               >
                                                                   <DeleteIcon />
                                                               </IconButton>
-                                                              <Checkbox
-                                                                  icon={
-                                                                      <FolderOffIcon
-                                                                          color="disabled"
-                                                                          sx={{ width: '25px', height: '25px' }}
-                                                                      />
-                                                                  }
-                                                                  checkedIcon={
-                                                                      <FolderIcon
-                                                                          sx={{
-                                                                              width: '25px',
-                                                                              height: '25px',
-                                                                              color: '#000000'
-                                                                          }}
-                                                                      />
-                                                                  }
-                                                                  sx={{ width: '25px', height: '25px' }}
-                                                                  onClick={() => taskArchived(note.id)}
-                                                              />
+                                                              <ListItemAvatar>
+                                                                  <IconButton onClick={() => taskArchived(note.id)}>
+                                                                      {note.archived ? (
+                                                                          <>
+                                                                              <FolderIcon sx={{ color: 'gray' }} />
+                                                                          </>
+                                                                      ) : (
+                                                                          <>
+                                                                              <FolderOffIcon sx={{ color: 'gray' }} />
+                                                                          </>
+                                                                      )}
+                                                                  </IconButton>
+                                                              </ListItemAvatar>
                                                           </CardActions>
                                                       </Card>
                                                   </Grid>
@@ -324,7 +319,7 @@ const Notes: React.FC = () => {
                                                               height: '150px',
                                                               marginY: '25px',
                                                               marginX: '15px',
-                                                              position: 'relative' // Adicione essa linha para garantir que o posicionamento absoluto seja relativo ao card
+                                                              position: 'relative'
                                                           }}
                                                       >
                                                           <CardContent>
@@ -340,8 +335,8 @@ const Notes: React.FC = () => {
                                                               sx={{
                                                                   display: 'flex',
                                                                   justifyContent: 'space-between',
-                                                                  position: 'absolute', // Adicione essa linha para posicionar o CardActions de forma absoluta
-                                                                  bottom: 0 // Adicione essa linha para posicionar o CardActions no final do card
+                                                                  position: 'absolute',
+                                                                  bottom: 0
                                                               }}
                                                           >
                                                               <IconButton
@@ -358,29 +353,19 @@ const Notes: React.FC = () => {
                                                               >
                                                                   <DeleteIcon />
                                                               </IconButton>
-                                                              <Checkbox
-                                                                  icon={
-                                                                      <FolderOffIcon
-                                                                          color="disabled"
-                                                                          sx={{ width: '25px', height: '25px' }}
-                                                                      />
-                                                                  }
-                                                                  checkedIcon={
-                                                                      <FolderIcon
-                                                                          sx={{
-                                                                              width: '25px',
-                                                                              height: '25px',
-                                                                              color: '#000000'
-                                                                          }}
-                                                                      />
-                                                                  }
-                                                                  sx={{
-                                                                      width: '25px',
-                                                                      height: '25px',
-                                                                      marginLeft: '13px !important'
-                                                                  }}
-                                                                  onClick={() => taskArchived(note.id)}
-                                                              />
+                                                              <ListItemAvatar>
+                                                                  <IconButton onClick={() => taskArchived(note.id)}>
+                                                                      {note.archived ? (
+                                                                          <>
+                                                                              <FolderIcon sx={{ color: 'gray' }} />
+                                                                          </>
+                                                                      ) : (
+                                                                          <>
+                                                                              <FolderOffIcon sx={{ color: 'gray' }} />
+                                                                          </>
+                                                                      )}
+                                                                  </IconButton>
+                                                              </ListItemAvatar>
                                                           </CardActions>
                                                       </Card>
                                                   </Grid>
