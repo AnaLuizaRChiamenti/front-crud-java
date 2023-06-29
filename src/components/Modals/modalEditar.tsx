@@ -6,9 +6,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from '@mui/system';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import taskType from '../types/taskType';
-import { getTaskAsyncThunk, taskUpdateAsyncThunk } from '../store/modules/UserSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import taskType from '../../types/taskType';
+import { getTaskAsyncThunk, taskUpdateAsyncThunk } from '../../store/modules/UserSlice';
 
 interface ModalInputsProps {
     openModal: boolean;

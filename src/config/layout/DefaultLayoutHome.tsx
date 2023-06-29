@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import ResponsiveAppBarHome from '../../components/AppBarHome';
+import ResponsiveAppBarHome from '../../components/AppBars/AppBarHome';
 
 interface DefaultLayoutProps {
     component: React.FC;

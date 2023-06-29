@@ -4,7 +4,7 @@ import bghome from '../images/bghome.png';
 
 const Home: React.FC = () => {
     return (
-        <Grid container width="100%" height="100%" bgcolor="#D7F2BA">
+        <Grid container width="100%" height="100%" bgcolor="#d2c4f9">
             <Grid item display="flex" flexGrow={1}>
                 <Grid
                     item
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
                         <Typography
                             variant="h2"
                             sx={{
-                                fontFamily: 'inter',
+                                fontFamily: 'Adobe clean',
                                 fontSize: { xs: '16px', md: '20px', lg: '35px' }
                             }}
                         >
@@ -43,7 +43,7 @@ const Home: React.FC = () => {
                         <Typography
                             variant="h5"
                             sx={{
-                                fontFamily: 'inter',
+                                fontFamily: 'Adobe clean',
                                 fontSize: { xs: '0', md: '15px', lg: '20px' },
                                 marginTop: '20px'
                             }}

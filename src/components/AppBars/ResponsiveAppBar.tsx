@@ -14,8 +14,8 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import routes from '../routes/routes';
-import { logout } from '../store/modules/UserSlice';
+import routes from '../../routes/routes';
+import { logout } from '../../store/modules/UserSlice';
 
 const ResponsiveAppBar: React.FC = () => {
     const navigate = useNavigate();
@@ -47,7 +47,7 @@ const ResponsiveAppBar: React.FC = () => {
     };
 
     return (
-        <AppBar position="absolute" sx={{ backgroundColor: '#c98de7' }}>
+        <AppBar position="absolute" sx={{ backgroundColor: '#26235b' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -91,7 +91,7 @@ const ResponsiveAppBar: React.FC = () => {
                             <Button
                                 key={page.url}
                                 onClick={() => handleCloseNavMenu(page.url)}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ my: 2, color: 'white', display: 'block' }}
                             >
                                 {page.label}
                             </Button>
@@ -103,7 +103,7 @@ const ResponsiveAppBar: React.FC = () => {
                         component="a"
                         sx={{
                             mr: 2,
-                            display: { xs: 'none', sm: 'flex', alignSelf: 'center', color: 'black' },
+                            display: { xs: 'none', sm: 'flex', alignSelf: 'center' },
 
                             textDecoration: 'none'
                         }}

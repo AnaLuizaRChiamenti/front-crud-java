@@ -29,9 +29,9 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 
-import ModalInputs from '../components/modalAddInput';
-import ModalInputsEdit from '../components/modalEditar';
-import ResponsiveAppBar from '../components/ResponsiveAppBar';
+import ModalInputs from '../components/Modals/modalAddInput';
+import ModalInputsEdit from '../components/Modals/modalEditar';
+import ResponsiveAppBar from '../components/AppBars/ResponsiveAppBar';
 
 import taskType from '../types/taskType';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -44,6 +44,7 @@ const Notes: React.FC = () => {
     const [editedTaks, setEditedTaks] = useState({} as taskType);
     const [showArchived, setShowArchived] = useState(false);
     const email = useAppSelector(state => state.user.user.email);
+    const user = useAppSelector(state => state.user.user);
     const listTaks = useAppSelector(state => state.user.user.tasks);
     const archivedTasks = listTaks.filter(item => item.archived);
     const [filterTask, setFilterTask] = useState('');
@@ -60,12 +61,6 @@ const Notes: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
-    React.useEffect(() => {
-        if (!email) {
-            navigate('/');
-        }
-    }, []);
 
     const handleClose = () => {
         setOpenAdd(false);
@@ -171,10 +166,16 @@ const Notes: React.FC = () => {
         setShowArchived(!showArchived);
     };
 
+    React.useEffect(() => {
+        if (!user.email) {
+            navigate('/');
+        }
+    }, [user]);
+
     return (
         <Grid container sx={{ width: '100%', height: '100vh' }}>
             <ResponsiveAppBar />
-            <Box width="100%" bgcolor="#EFF7CF" paddingTop="4.5rem">
+            <Box width="100%" bgcolor="#d2c4f9" paddingTop="4.5rem">
                 <Grid container marginBottom={10}>
                     <Grid item xs={12}>
                         <Container sx={{ marginTop: '20px' }}>
@@ -201,7 +202,7 @@ const Notes: React.FC = () => {
                                                         borderColor: '#000000'
                                                     },
                                                     '&.Mui-focused fieldset': {
-                                                        borderColor: '#c98de7'
+                                                        borderColor: '#f6e03c'
                                                     },
                                                     '& .MuiInputBase-input': {
                                                         color: '#000000'
@@ -399,7 +400,7 @@ const Notes: React.FC = () => {
                     bottom: '20px',
                     backgroundColor: '#000000',
                     ':hover': {
-                        backgroundColor: '#773299'
+                        backgroundColor: '#f6e03c'
                     }
                 }}
             >

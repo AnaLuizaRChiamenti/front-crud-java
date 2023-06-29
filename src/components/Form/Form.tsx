@@ -1,8 +1,8 @@
 import { Alert, Box, Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { getTaskAsyncThunk, userCreateAsyncThunk, userLoginAsyncThunk } from '../store/modules/UserSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { getTaskAsyncThunk, userCreateAsyncThunk, userLoginAsyncThunk } from '../../store/modules/UserSlice';
 import { AxiosError } from 'axios';
 
 interface FormProps {
@@ -64,6 +64,7 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
             navigate('/signin');
         }
     }
+
     return (
         <Box
             component="form"
@@ -120,12 +121,18 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
                 ''
             )}
 
-            <Button disabled={disabled} type="submit" variant="contained" fullWidth sx={{ mt: 3, mb: 2 }}>
+            <Button
+                disabled={disabled}
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{ mt: 3, mb: 2, bgcolor: '#26235b !important' }}
+            >
                 {textButton}
             </Button>
 
             <Grid container>
-                <Grid item xs={8} textAlign="end">
+                <Grid item xs={12} textAlign="center">
                     {mode === 'signin' ? (
                         <Typography variant="body2">
                             <Link style={{ color: 'inherit' }} to="/signup">

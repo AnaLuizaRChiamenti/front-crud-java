@@ -7,10 +7,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from '@mui/system';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import taskType from '../types/taskType';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import taskType from '../../types/taskType';
 import { Alert } from '@mui/material';
-import { getTaskAsyncThunk, taskCreateAsyncThunk } from '../store/modules/UserSlice';
+import { getTaskAsyncThunk, taskCreateAsyncThunk } from '../../store/modules/UserSlice';
 
 interface ModalInputsProps {
     openModal: boolean;
