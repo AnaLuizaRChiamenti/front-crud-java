@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from '@mui/system';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import taskType from '../../types/taskType';
-import { getTaskAsyncThunk, taskUpdateAsyncThunk } from '../../store/modules/UserSlice';
+import { getTaskAsyncThunk, taskUpdateAsyncThunk } from '../../store/modules/userLogged';
 
 interface ModalInputsProps {
     openModal: boolean;
@@ -20,7 +20,7 @@ interface ModalInputsProps {
 const ModalInputsEdit: React.FC<ModalInputsProps> = ({ openModal, actionCancel, actionConfirm, task }) => {
     const dispatch = useAppDispatch();
     const [editedTask, setEditedTask] = React.useState(task);
-    const email = useAppSelector(state => state.user.user.email);
+    const email = useAppSelector(state => state.userLogged.userLogged.email);
 
     const handleClose = () => {
         actionCancel();

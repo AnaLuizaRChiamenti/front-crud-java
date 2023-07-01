@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import routes from '../../routes/routes';
-import { logout } from '../../store/modules/UserSlice';
+import { logout } from '../../store/modules/userLogged';
 
 const ResponsiveAppBar: React.FC = () => {
     const navigate = useNavigate();
@@ -38,8 +38,8 @@ const ResponsiveAppBar: React.FC = () => {
     };
 
     const handleCloseUserMenu = () => {
-        dispatch(logout());
         navigate('/');
+        dispatch(logout());
     };
 
     const handleClose = () => {

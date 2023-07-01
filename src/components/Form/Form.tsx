@@ -2,8 +2,9 @@ import { Alert, Box, Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getTaskAsyncThunk, userCreateAsyncThunk, userLoginAsyncThunk } from '../../store/modules/UserSlice';
-import { AxiosError } from 'axios';
+import { getTaskAsyncThunk, userLoginAsyncThunk } from '../../store/modules/userLogged';
+import { userCreateAsyncThunk } from '../../store/modules/UsersSlice';
+import { saveUserLogged } from '../../store/modules/userLogged';
 
 interface FormProps {
     mode: 'signin' | 'signup';
@@ -20,6 +21,8 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
     const [errorRepassword, setErrorRepassword] = useState(false);
     const [successAlertVisible, setSuccessAlertVisible] = useState(false);
     const [successAlertVisibleEmail, setSuccessAlertVisibleEmail] = useState(false);
+    const user = useAppSelector(state => state.users.user);
+    const userLogged = useAppSelector(state => state.userLogged);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -47,16 +50,22 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
         }
     }, [email, password, repassword, mode]);
 
+    useEffect(() => {
+        if (user) {
+            dispatch(saveUserLogged(user?.email ?? ''));
+        }
+    }, [user]);
+
     function handleSubmit(evento: React.FormEvent<HTMLFormElement>) {
         evento.preventDefault();
 
         if (mode === 'signin') {
-            const user = {
+            const userLogged = {
                 email: email,
                 password: password
             };
 
-            dispatch(userLoginAsyncThunk(user));
+            dispatch(userLoginAsyncThunk(userLogged));
             dispatch(getTaskAsyncThunk(email));
             navigate('/notes');
         } else {

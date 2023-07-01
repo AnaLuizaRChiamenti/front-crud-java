@@ -1,24 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import userType from '../../types/userType';
 import api from '../../service';
-import axios, { AxiosError } from 'axios';
+import userType from '../../types/userType';
 
-interface userstate {
-    user: userType;
-}
 const initialState: userstate = {
-    user: { email: '', password: '', tasks: [] }
+    userLogged: { email: '', password: '', tasks: [] }
 };
-
-interface userLogin {
-    email: string;
-    password: string;
-}
-
-interface userCreate {
-    email: string;
-    password: string;
-    repassword: string;
+interface userstate {
+    userLogged: userType;
 }
 
 interface taskCreate {
@@ -39,31 +27,10 @@ interface taskUpdate {
     description: string;
 }
 
-export const userCreateAsyncThunk = createAsyncThunk(
-    'userCreate',
-    async ({ email, password, repassword }: userCreate) => {
-        try {
-            const response = await api.post('/users', {
-                email,
-                password,
-                repassword
-            });
-            console.log(response);
-
-            return response.data;
-        } catch (error) {
-            let errorMessage = 'Erro desconhecido';
-
-            if (axios.isAxiosError(error)) {
-                if (error.response?.data?.error) {
-                    errorMessage = error.response.data.error;
-                }
-            }
-
-            throw new Error(errorMessage);
-        }
-    }
-);
+interface userLogin {
+    email: string;
+    password: string;
+}
 
 export const userLoginAsyncThunk = createAsyncThunk('login', async ({ email, password }: userLogin) => {
     const response = await api.get(`users/login/${email}/${password}`, {});
@@ -121,28 +88,31 @@ export const taskArchivedAsyncThunk = createAsyncThunk('taskArchive', async ({ e
     return response.data;
 });
 
-export const userSlice = createSlice({
-    name: 'User',
+const userLogged = createSlice({
+    name: 'userLogged',
     initialState,
     extraReducers(builder) {
         builder.addCase(userLoginAsyncThunk.fulfilled, (state, action) => {
-            state.user.email = action.payload.email;
-            state.user.password = action.payload.password;
+            state.userLogged.email = action.payload.email;
+            state.userLogged.password = action.payload.password;
         });
         builder.addCase(taskCreateAsyncThunk.fulfilled, (state, action) => {
-            state.user.tasks.push(action.payload);
+            state.userLogged.tasks.push(action.payload);
         });
         builder.addCase(getTaskAsyncThunk.fulfilled, (state, action) => {
-            state.user.tasks = action.payload;
+            state.userLogged.tasks = action.payload;
         });
     },
     reducers: {
+        saveUserLogged: (state, action: PayloadAction<string>) => {
+            state.userLogged.email = action.payload;
+            state.userLogged.password = '';
+            state.userLogged.tasks = [];
+        },
         logout: () => {
             return initialState;
         }
     }
 });
-
-export default userSlice.reducer;
-
-export const { logout } = userSlice.actions;
+export const { saveUserLogged, logout } = userLogged.actions;
+export const userLoggedReducer = userLogged.reducer;
