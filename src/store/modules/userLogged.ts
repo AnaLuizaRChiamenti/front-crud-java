@@ -122,15 +122,10 @@ const userLogged = createSlice({
         });
     },
     reducers: {
-        saveUserLogged: (state, action: PayloadAction<string>) => {
-            state.userLogged.email = action.payload;
-            state.userLogged.password = '';
-            state.userLogged.tasks = [];
-        },
         logout: () => {
             return initialState;
         }
     }
 });
-export const { saveUserLogged, logout } = userLogged.actions;
+export const { logout } = userLogged.actions;
 export const userLoggedReducer = userLogged.reducer;

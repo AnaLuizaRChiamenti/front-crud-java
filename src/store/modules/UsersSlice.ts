@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../service';
-import taskType from '../../types/taskType';
+import userType from '../../types/userType';
 
 interface usersState {
-    users: taskType[];
+    users: userType[];
 }
 const initialState: usersState = {
     users: []

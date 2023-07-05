@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getTaskAsyncThunk, userLoginAsyncThunk } from '../../store/modules/userLogged';
 import { userCreateAsyncThunk } from '../../store/modules/userLogged';
-import { saveUserLogged } from '../../store/modules/userLogged';
+import { getUsersAsyncThunk } from '../../store/modules/UsersSlice';
 
 interface FormProps {
     mode: 'signin' | 'signup';
@@ -21,7 +21,8 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
     const [errorRepassword, setErrorRepassword] = useState(false);
     const [successAlertVisible, setSuccessAlertVisible] = useState(false);
     const [successAlertVisibleEmail, setSuccessAlertVisibleEmail] = useState(false);
-    const user = useAppSelector(state => state.users.users);
+    const [alertError, setAlertError] = useState(false);
+    const listUsers = useAppSelector(state => state.users.users);
     const userLogged = useAppSelector(state => state.userLogged.userLogged);
 
     const dispatch = useAppDispatch();
@@ -58,18 +59,41 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
 
     function handleSubmit(evento: React.FormEvent<HTMLFormElement>) {
         evento.preventDefault();
+        dispatch(getUsersAsyncThunk());
+        const newUser = {
+            email: email,
+            password: password
+        };
 
         if (mode === 'signin') {
-            const userLogged = {
-                email: email,
-                password: password
-            };
-
-            dispatch(userLoginAsyncThunk(userLogged));
+            const userExist = listUsers.find(
+                value => value.email === newUser.email && value.password === newUser.password
+            );
+            if (!userExist) {
+                setAlertError(true);
+                setTimeout(() => {
+                    setAlertError(false);
+                }, 5000);
+                return;
+            }
+            dispatch(userLoginAsyncThunk(newUser));
             dispatch(getTaskAsyncThunk(email));
         } else {
+            const retorno = listUsers.some(value => value.email === newUser.email);
+            if (retorno) {
+                setSuccessAlertVisibleEmail(true);
+                setTimeout(() => {
+                    setSuccessAlertVisibleEmail(false);
+                }, 3000);
+                return;
+            }
+
+            setSuccessAlertVisible(true);
+            setTimeout(() => {
+                setSuccessAlertVisible(false);
+                navigate('/signin');
+            }, 3000);
             dispatch(userCreateAsyncThunk({ email, password, repassword }));
-            navigate('/signin');
         }
     }
 
@@ -164,6 +188,11 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
             {successAlertVisibleEmail && (
                 <Alert severity="warning" sx={{ mt: 2 }} onClose={() => setSuccessAlertVisibleEmail(false)}>
                     Esse email ja está em uso!
+                </Alert>
+            )}
+            {alertError && (
+                <Alert severity="warning" sx={{ mt: 2 }} onClose={() => setSuccessAlertVisibleEmail(false)}>
+                    Email ou senha incorreto!
                 </Alert>
             )}
         </Box>
