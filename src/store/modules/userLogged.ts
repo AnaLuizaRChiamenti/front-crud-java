@@ -32,6 +32,24 @@ interface userLogin {
     password: string;
 }
 
+interface userCreate {
+    email: string;
+    password: string;
+    repassword: string;
+}
+
+export const userCreateAsyncThunk = createAsyncThunk(
+    'userCreate',
+    async ({ email, password, repassword }: userCreate) => {
+        const response = await api.post('/users', {
+            email,
+            password,
+            repassword
+        });
+        return response.data;
+    }
+);
+
 export const userLoginAsyncThunk = createAsyncThunk('login', async ({ email, password }: userLogin) => {
     const response = await api.get(`users/login/${email}/${password}`, {});
     console.log(response);

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getTaskAsyncThunk, userLoginAsyncThunk } from '../../store/modules/userLogged';
-import { userCreateAsyncThunk } from '../../store/modules/UsersSlice';
+import { userCreateAsyncThunk } from '../../store/modules/userLogged';
 import { saveUserLogged } from '../../store/modules/userLogged';
 
 interface FormProps {
@@ -21,8 +21,8 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
     const [errorRepassword, setErrorRepassword] = useState(false);
     const [successAlertVisible, setSuccessAlertVisible] = useState(false);
     const [successAlertVisibleEmail, setSuccessAlertVisibleEmail] = useState(false);
-    const user = useAppSelector(state => state.users.user);
-    const userLogged = useAppSelector(state => state.userLogged);
+    const user = useAppSelector(state => state.users.users);
+    const userLogged = useAppSelector(state => state.userLogged.userLogged);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -51,10 +51,10 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
     }, [email, password, repassword, mode]);
 
     useEffect(() => {
-        if (user) {
-            dispatch(saveUserLogged(user?.email ?? ''));
+        if (userLogged.email) {
+            navigate('/notes');
         }
-    }, [user]);
+    }, [userLogged]);
 
     function handleSubmit(evento: React.FormEvent<HTMLFormElement>) {
         evento.preventDefault();
@@ -67,7 +67,6 @@ const Form: React.FC<FormProps> = ({ mode, textButton }) => {
 
             dispatch(userLoginAsyncThunk(userLogged));
             dispatch(getTaskAsyncThunk(email));
-            navigate('/notes');
         } else {
             dispatch(userCreateAsyncThunk({ email, password, repassword }));
             navigate('/signin');

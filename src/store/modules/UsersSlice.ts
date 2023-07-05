@@ -1,52 +1,29 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import userType from '../../types/userType';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../service';
-import axios, { AxiosError } from 'axios';
+import taskType from '../../types/taskType';
 
-interface userstate {
-    user: userType;
+interface usersState {
+    users: taskType[];
 }
-const initialState: userstate = {
-    user: { email: '', password: '', tasks: [] }
+const initialState: usersState = {
+    users: []
 };
 
-interface userCreate {
-    email: string;
-    password: string;
-    repassword: string;
-}
+export const getUsersAsyncThunk = createAsyncThunk('getUsers', async () => {
+    const response = await api.get('/users');
+    return response.data;
+});
 
-export const userCreateAsyncThunk = createAsyncThunk(
-    'userCreate',
-    async ({ email, password, repassword }: userCreate) => {
-        try {
-            const response = await api.post('/users', {
-                email,
-                password,
-                repassword
-            });
-            console.log(response);
-
-            return response.data;
-        } catch (error) {
-            let errorMessage = 'Erro desconhecido';
-
-            if (axios.isAxiosError(error)) {
-                if (error.response?.data?.error) {
-                    errorMessage = error.response.data.error;
-                }
-            }
-
-            throw new Error(errorMessage);
-        }
-    }
-);
-
-export const userSlice = createSlice({
-    name: 'User',
+export const usersSlice = createSlice({
+    name: 'users',
     initialState,
+    extraReducers(builder) {
+        builder.addCase(getUsersAsyncThunk.fulfilled, (state, action) => {
+            state.users = action.payload;
+        });
+    },
 
     reducers: {}
 });
 
-export default userSlice.reducer;
+export default usersSlice.reducer;
